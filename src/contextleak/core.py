@@ -67,6 +67,7 @@ class ContextLeakCore:
         self.active_filters = self._load_config()
         self.custom_patterns = self._load_custom_list()
 
+
     def _ensure_spacy_model(self):
         """Automatically checks for and downloads the NLP model if missing."""
         model_name = "en_core_web_lg"

@@ -1,36 +1,39 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "contextleak"
-version = "0.1.0"  # Pamiętaj o Semantic Versioning
-description = "Narzędzie do ochrony przed wyciekiem danych wrażliwych w LLM"
+version = "1.0.0"
+description = "Open Source AI Firewall & Vulnerability Scanner for Local LLMs"
 readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
 authors = [
-  { name = "Oskar Brzycki", email = "mroscar005@gmail.com" },
+  {name = "Oskar Brzycki", email = "your_email@example.com"}
 ]
-license = { file = "LICENSE" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Intended Audience :: Developers",
     "Topic :: Security",
 ]
-requires-python = ">=3.8"
+# Dependency list based on your requirements.txt
 dependencies = [
-    "rich",      # Do ładnego CLI
-    "pydantic",  # Do walidacji danych (opcjonalne, ale pro)
+    "torch",
+    "transformers",
+    "presidio-analyzer",   # Microsoft Presidio analysis engine
+    "presidio-anonymizer", # Microsoft Presidio anonymization module
+    "spacy",
+    "streamlit",
+    "pandas",
+    "numpy",
 ]
+
+[project.scripts]
+# Command to run the application
+contextleak = "contextleak.cli:main"
 
 [project.urls]
 "Homepage" = "https://github.com/oskarbrzycki/contextleak"
 "Bug Tracker" = "https://github.com/oskarbrzycki/contextleak/issues"
-
-# To sprawia, że komenda 'contextleak' działa w terminalu
-[project.scripts]
-contextleak = "contextleak.cli:main"
-
-[tool.setuptools.package-data]
-contextleak = ["py.typed"] # Informacja, że paczka ma typy
