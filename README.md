@@ -43,8 +43,8 @@ ContextLeak employs a **Layered Security Architecture**:
 
 ```mermaid
 graph LR
-    A[User Input] --> B{Layer 1: Regex}
-    B --> C{Layer 2: Custom Blocklist}
-    C --> D{Layer 3: Presidio NLP}
-    D --> E[Sanitized Input]
-    E --> F[LLM (Llama 3)]
+    A["User Input"] --> B{"Layer 1: Regex"}
+    B --> C{"Layer 2: Custom Blocklist"}
+    C --> D{"Layer 3: Presidio NLP"}
+    D --> E["Sanitized Input"]
+    E --> F["LLM (Llama 3)"]
