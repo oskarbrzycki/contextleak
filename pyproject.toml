@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contextleak"
+version = "1.0.0"
+description = "Open Source AI Firewall & Vulnerability Scanner for Local LLMs"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+  {name = "ContextLeak User", email = "user@example.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+]
+dependencies = []
+
+[project.scripts]
+# To tworzy komendę 'contextleak' w konsoli
+contextleak = "contextleak.cli:main"
+
+[project.urls]
+"Homepage" = "https://github.com/TwojNick/ContextLeak"

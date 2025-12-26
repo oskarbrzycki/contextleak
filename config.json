@@ -1,0 +1,13 @@
+{
+    "openai_key": true,
+    "aws_key": true,
+    "private_key": true,
+    "generic_secret": true,
+    "email": false,
+    "phone_number": true,
+    "credit_card": true,
+    "crypto_btc": true,
+    "crypto_eth": true,
+    "ip_address": true,
+    "mac_address": true
+}
