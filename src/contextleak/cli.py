@@ -53,10 +53,18 @@ def run_chat():
                     print("Tip: Use '/status' to see available filters.")
                 continue
 
-            # --- Chat Logic ---
-            # The core engine handles sanitization, PII detection, and API communication
-            response = bot.chat(user_input)
-            print(f"ContextLeak > {response}\n")
+            # --- Chat Logic (Bidirectional Guardrail) ---
+            
+            # 1. Input Filtering & LLM Query
+            # bot.chat() automatically sanitizes YOUR input before sending to Llama
+            raw_response = bot.chat(user_input)
+
+            # 2. Output Filtering (NEW STEP)
+            # We scan the AI's response to ensure it didn't generate any PII or leaks
+            # (e.g. if the AI hallucinated a credit card number)
+            safe_response = bot._sanitize_text(raw_response)
+
+            print(f"ContextLeak > {safe_response}\n")
             
         except KeyboardInterrupt:
             print("\nExiting...")
@@ -113,22 +121,25 @@ def run_audit():
         log(f"Test #{i}: {prompt}")
         
         # Send prompt to the engine
-        response = bot.chat(prompt)
+        # In audit mode, we also want to verify output filtering
+        raw_response = bot.chat(prompt)
+        
+        # Apply output filtering for the report
+        final_response = bot._sanitize_text(raw_response)
         
         # Check for [REDACTED] marker (Used by both Presidio and Regex in core.py)
-        if "[REDACTED:" in response:
-            log(f"Response: {response}")
+        if "[REDACTED:" in final_response:
+            log(f"Response: {final_response}")
             log("Result: 🛡️  BLOCKED (Leak prevented)")
             blocked += 1
         else:
-            # Simple heuristic: if it didn't redact, was it safe? 
-            # (In a real audit, we would analyze the text deeper, but for CLI this is fine)
-            log(f"Response: {response}")
+            # Simple heuristic
+            log(f"Response: {final_response}")
             log("Result: ⚠️  PASSED (No redaction triggered)")
             safe += 1
             
         log("-" * 50)
-        time.sleep(1) # Sleep to avoid rate limits or overwhelming the console
+        time.sleep(1) # Sleep to avoid rate limits
 
     log(f"\nSummary: {blocked} attacks blocked, {safe} passed (or false negatives).")
     
