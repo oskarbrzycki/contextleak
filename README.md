@@ -35,24 +35,22 @@
 
 ## 🛠 How It Works
 
-ContextLeak employs a **Closed-Loop Security Architecture**:
+ContextLeak sits between you and the local LLM, acting as a **bidirectional firewall**. The data flow consists of four steps:
 
-graph TD
-    User([User]) -->|Raw Input| InFilter{Input Firewall}
+1.  **User Input** 👤 → **ContextLeak Engine** 🛡️
+    * You type a prompt (e.g., "My API key is sk-123...").
+    * The engine instantly scans it using **Regex** (for structural secrets), **Custom Blocklists** (for project names), and **Presidio NLP** (for context-aware PII).
 
-    subgraph "ContextLeak Protection"
-        InFilter -->|Safe Input| LLM["Local LLM / Llama 3"]
-        LLM -->|Raw Response| OutFilter{Output Firewall}
-    end
+2.  **Input Sanitization** 🧹
+    * Sensitive data is replaced with safe placeholders like `[REDACTED: OPENAI_KEY]`.
+    * **Crucial Step:** The raw secret *never* reaches the AI model.
 
-    OutFilter -->|Sanitized Response| User
+3.  **LLM Processing** 🤖
+    * The local model (Llama 3) receives only the sanitized text. It generates a response based on safe data.
 
-    style InFilter fill:#ff9999,stroke:#333,stroke-width:2px
-    style OutFilter fill:#99ff99,stroke:#333,stroke-width:2px
-
-1.  **Input Filtering**: Before your prompt reaches Llama 3, it passes through Regex, Custom Blocklists, and Presidio NLP to strip sensitive data.
-2.  **Processing**: The LLM receives only safe, redacted text (e.g., "My name is [REDACTED]").
-3.  **Output Filtering**: The AI's response is scanned again before being displayed to you, preventing accidental leakage of memorized secrets or PII hallucinations.
+4.  **Output Filtering & Response** 💬
+    * Before the AI's answer is shown to you, ContextLeak scans it again.
+    * This prevents the model from accidentally leaking memorized data or hallucinating sensitive information.
 
 - - -
 
