@@ -37,7 +37,18 @@
 
 ContextLeak employs a **Closed-Loop Security Architecture**:
 
-graph TD User([User]) -->|Raw Input| InFilter{Input Firewall} subgraph ContextLeak Protection InFilter -->|Safe Input| LLM["Local LLM / Llama 3"] LLM -->|Raw Response| OutFilter{Output Firewall} end OutFilter -->|Sanitized Response| User style InFilter fill:#ff9999,stroke:#333,stroke-width:2px style OutFilter fill:#99ff99,stroke:#333,stroke-width:2px
+graph TD
+    User([User]) -->|Raw Input| InFilter{Input Firewall}
+
+    subgraph "ContextLeak Protection"
+        InFilter -->|Safe Input| LLM["Local LLM / Llama 3"]
+        LLM -->|Raw Response| OutFilter{Output Firewall}
+    end
+
+    OutFilter -->|Sanitized Response| User
+
+    style InFilter fill:#ff9999,stroke:#333,stroke-width:2px
+    style OutFilter fill:#99ff99,stroke:#333,stroke-width:2px
 
 1.  **Input Filtering**: Before your prompt reaches Llama 3, it passes through Regex, Custom Blocklists, and Presidio NLP to strip sensitive data.
 2.  **Processing**: The LLM receives only safe, redacted text (e.g., "My name is [REDACTED]").
